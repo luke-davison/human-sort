@@ -1,0 +1,10 @@
+.landingPage {
+  display: flex;
+  gap: 40px;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

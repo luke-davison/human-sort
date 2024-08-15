@@ -2,12 +2,13 @@
 
 import { observer } from "mobx-react";
 import { useAppStore } from "../hooks/use-app-store";
+import styles from "./landing-page-lists.module.css";
 
 export const LandingPageLists = observer(() => {
   const { listsLoaded, lists, goToList } = useAppStore();
 
   return (
-    <div className="landing-page-lists">
+    <div className={styles.landingPageLists}>
       <div className="landing-page-lists-subheading">
         View or continue sorting an existing list
       </div>

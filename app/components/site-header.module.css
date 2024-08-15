@@ -1,0 +1,14 @@
+.siteHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.siteTitle {
+  font-size: 30px;
+}
+
+.siteDescription {
+  margin-top: 10px;
+}
