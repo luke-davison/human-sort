@@ -1,3 +1,5 @@
+"use client";
+
 import { observer } from "mobx-react";
 import { dummyLists } from "./dummy-lists";
 import { useAppStore } from "../hooks/use-app-store";

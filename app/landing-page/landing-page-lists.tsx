@@ -18,14 +18,19 @@ export const LandingPageLists = observer(() => {
         )}
 
         {lists.map((list) => (
-          <div
+          <a
             key={list.id}
             className="landing-page-list"
             onClick={() => goToList(list)}
           >
-            <div>{list.items.length} items</div>
-            <div>{list.comparisons.length} comparisons made</div>
-          </div>
+            <div className="landing-page-list-name">{list.name}</div>
+            <div className="landing-page-list-size">
+              {list.items.length} items
+            </div>
+            <div className="landing-page-list-comparisons">
+              {list.comparisons.length} comparisons made
+            </div>
+          </a>
         ))}
       </div>
     </div>

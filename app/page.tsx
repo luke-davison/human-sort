@@ -1,3 +1,5 @@
+"use client";
+
 import { AppStore } from "./stores/app-store";
 import { AppStoreContext } from "./hooks/use-app-store";
 import { useMemo } from "react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Data } from "../types";
 
 const DBNAME = "sortdb";
