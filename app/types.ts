@@ -22,3 +22,13 @@ export type NewData = Omit<Data, "id">;
 export type SortType = "tournament";
 
 export type Page = "landing" | "listing" | "dummying" | "sorting" | "uploading";
+
+export interface SearchItem {
+  id: string;
+  name: string;
+  year: string | undefined;
+}
+
+export interface BoardGame extends SearchItem {
+  image: string;
+}
