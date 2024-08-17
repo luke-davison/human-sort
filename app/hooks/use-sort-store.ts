@@ -8,13 +8,13 @@ import { List } from "../stores/list";
 const appStore = new AppStore();
 const store = new SortStore(
   appStore,
-  new List({
+  new List(appStore, {
     id: 0,
     name: "",
     description: "",
     sortType: "tournament",
-    items: "",
-    comparisons: ""
+    items: "[]",
+    comparisons: "[]"
   })
 );
 

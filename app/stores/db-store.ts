@@ -4,9 +4,6 @@ import { Data } from "../types";
 
 const DBNAME = "sortdb";
 const STORENAME = "sorts";
-export const DIVIDER_CHAR = "|";
-export const SPLIT_CHAR = "^";
-type SortType = "tournament";
 
 export class DBStore {
   db: IDBDatabase | undefined;
@@ -35,7 +32,7 @@ export class DBStore {
         objectStore.createIndex("description", "description", {
           unique: false
         });
-        objectStore.createIndex("options", "options", { unique: false });
+        objectStore.createIndex("items", "items", { unique: false });
         objectStore.createIndex("sorttype", "sorttype", { unique: false });
         objectStore.createIndex("comparisons", "comparisons", {
           unique: false

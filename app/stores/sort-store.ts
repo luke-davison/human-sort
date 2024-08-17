@@ -28,7 +28,7 @@ export class SortStore {
 
   getWins = (item: Item): Comparison[] => {
     return this.comparisons.reduce((arr: Comparison[], comparison) => {
-      if (comparison.winner.key === item.key) {
+      if (comparison.winner.id === item.id) {
         arr.push(comparison);
       }
       return arr;
@@ -37,7 +37,7 @@ export class SortStore {
 
   get unbeatenItems() {
     const unsortedItems = this.items.filter((item) => {
-      return this.comparisons.every(({ loser }) => loser.key !== item.key);
+      return this.comparisons.every(({ loser }) => loser.id !== item.id);
     });
 
     return unsortedItems.sort(
@@ -70,7 +70,7 @@ export class SortStore {
       .map((treeItem) => this.getWins(treeItem))
       .flat();
     return unprunedTree.filter((treeItem) =>
-      unprunedTreeWins.every(({ loser }) => loser.key !== treeItem.key)
+      unprunedTreeWins.every(({ loser }) => loser.id !== treeItem.id)
     );
   };
 
@@ -87,8 +87,10 @@ export class SortStore {
     }
   }
 
-  submit = (winner: Item, loser: Item) => {
-    this.list.comparisons.push({ winner, loser });
+  submit = (left: Item, right: Item, pick: "l" | "r") => {
+    const winner = pick === "l" ? left : right;
+    const loser = pick === "l" ? right : left;
+    this.list.comparisons.push({ winner, loser, pick, left, right });
     this.appStore.saveList(this.list);
   };
 

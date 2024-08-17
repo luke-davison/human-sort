@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { SortStore } from "../stores/sort-store";
 import { useAppStore } from "../hooks/use-app-store";
 import { SortStoreContext } from "../hooks/use-sort-store";
+import { ItemImage } from "../components/item.image";
 
 export const SortingPage = observer(() => {
   const appStore = useAppStore();
@@ -35,15 +36,17 @@ export const SortingPage = observer(() => {
             <>
               <a
                 className="sorting-page-choice"
-                onClick={() => submit(left, right)}
+                onClick={() => submit(left, right, "l")}
               >
-                {left.label}
+                <div>{left.name}</div>
+                <ItemImage item={left} />
               </a>
               <a
                 className="sorting-page-choice"
-                onClick={() => submit(right, left)}
+                onClick={() => submit(left, right, "r")}
               >
-                {right.label}
+                <div>{right.name}</div>
+                <ItemImage item={right} />
               </a>
             </>
           )}
@@ -57,10 +60,10 @@ export const SortingPage = observer(() => {
 
         <div className="sorting-page-results">
           {results.map((result, index) => (
-            <div key={result.key} className="sorting-page-result">
+            <div key={result.id} className="sorting-page-result">
               {index + 1}
               {". "}
-              {result.label}
+              {result.name}
             </div>
           ))}
         </div>
@@ -70,9 +73,9 @@ export const SortingPage = observer(() => {
             <div key={index} className="sorting-page-comparison">
               {index + 1}
               {". "}
-              {comparison.winner.label}
-              {" > "}
-              {comparison.loser.label}
+              {comparison.left.name}
+              {comparison.pick === "l" ? " > " : " < "}
+              {comparison.right.name}
             </div>
           ))}
         </div>

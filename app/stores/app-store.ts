@@ -32,7 +32,7 @@ export class AppStore {
     await this.db.init();
 
     const data = await this.db.getAll();
-    const lists = data.map((datum) => new List(datum));
+    const lists = data.map((datum) => new List(this, datum));
 
     runInAction(() => {
       this.lists = lists;
@@ -46,12 +46,12 @@ export class AppStore {
     const data = await this.db.create({
       name,
       description: "",
-      items: "",
-      comparisons: "",
+      items: "[]",
+      comparisons: "[]",
       sortType: "tournament",
       ...rest
     });
-    const list = new List(data);
+    const list = new List(this, data);
     runInAction(() => {
       this.lists.push(list);
     });
@@ -70,6 +70,11 @@ export class AppStore {
 
   startNewList = () => {
     this.page = "listing";
+    this.createList("New list").then(
+      action((list) => {
+        this.currentList = list;
+      })
+    );
   };
 
   startADummyList = () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { XMLParser } from "fast-xml-parser";
-import { BoardGame, SearchItem } from "../types";
+import { BoardGame, BggSearchItem } from "../types";
 
 const parser = new XMLParser({ ignoreAttributes: false });
 
@@ -29,7 +29,7 @@ interface ParsedXMLSearch {
   };
 }
 export class BggStore {
-  convertParsedSearchItem = (item: ParsedXMLSearchItem): SearchItem => {
+  convertParsedSearchItem = (item: ParsedXMLSearchItem): BggSearchItem => {
     return {
       id: item["@_id"],
       name: item.name["@_value"],
@@ -37,7 +37,7 @@ export class BggStore {
     };
   };
 
-  search = async (text: string): Promise<SearchItem[]> => {
+  search = async (text: string): Promise<BggSearchItem[]> => {
     const response = await fetch(
       `https://boardgamegeek.com/xmlapi2/search?query=${text}&type=boardgame`
     );
@@ -48,7 +48,7 @@ export class BggStore {
     return output.items.item?.map(this.convertParsedSearchItem) ?? [];
   };
 
-  get = async (item: SearchItem): Promise<BoardGame> => {
+  get = async (item: BggSearchItem): Promise<BoardGame> => {
     const response = await fetch(
       `https://boardgamegeek.com/xmlapi2/thing?id=${item.id}`
     );

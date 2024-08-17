@@ -1,11 +1,24 @@
 export interface Item {
-  key: string;
-  label: string;
+  id: string;
+  name: string;
+  bggId?: string;
+  bggYear?: string;
+  bggImage?: string;
+  deleted?: boolean;
 }
 
 export interface Comparison {
+  left: Item;
+  right: Item;
+  pick: "l" | "r";
   winner: Item;
   loser: Item;
+}
+
+export interface ComparisonData {
+  left: string;
+  right: string;
+  pick: "l" | "r";
 }
 
 export interface Data {
@@ -23,12 +36,12 @@ export type SortType = "tournament";
 
 export type Page = "landing" | "listing" | "dummying" | "sorting" | "uploading";
 
-export interface SearchItem {
+export interface BggSearchItem {
   id: string;
   name: string;
   year: string | undefined;
 }
 
-export interface BoardGame extends SearchItem {
+export interface BoardGame extends BggSearchItem {
   image: string;
 }

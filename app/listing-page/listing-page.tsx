@@ -4,7 +4,8 @@ import { observer } from "mobx-react";
 import { useAppStore } from "../hooks/use-app-store";
 import { useEffect, useState } from "react";
 import { BggStore } from "../stores/bgg-store";
-import { BoardGame, SearchItem } from "../types";
+import { BoardGame, BggSearchItem } from "../types";
+import { ItemImage } from "../components/item.image";
 
 const bggStore = new BggStore();
 
@@ -13,8 +14,7 @@ export const ListingPage = observer(() => {
 
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [searchItems, setSearchItems] = useState<SearchItem[] | undefined>();
-  const [selected, setSelected] = useState<BoardGame[]>([]);
+  const [searchItems, setSearchItems] = useState<BggSearchItem[] | undefined>();
 
   useEffect(() => {
     const timeout = window.setTimeout(async () => {
@@ -28,10 +28,15 @@ export const ListingPage = observer(() => {
     return () => window.clearTimeout(timeout);
   }, [searchValue]);
 
-  const onSelect = async (item: SearchItem) => {
+  const onSelect = async (item: BggSearchItem) => {
     setSearchItems(undefined);
     const game = await bggStore.get(item);
-    setSelected([...selected, game]);
+    currentList?.addItem({
+      name: game.name,
+      bggId: game.id,
+      bggImage: game.image,
+      bggYear: game.year
+    });
   };
 
   return (
@@ -59,12 +64,10 @@ export const ListingPage = observer(() => {
       <div>
         <div>Selected</div>
 
-        {selected.map((boardgame) => (
-          <div key={boardgame.id}>
-            <div>{boardgame.name}</div>
-            <div>
-              <img src={boardgame.image} alt="Image" width={200} />
-            </div>
+        {currentList?.items.map((item) => (
+          <div key={item.id}>
+            <div>{item.name}</div>
+            <ItemImage item={item} />
           </div>
         ))}
       </div>

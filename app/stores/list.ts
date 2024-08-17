@@ -1,6 +1,12 @@
-import { computed, makeObservable, observable } from "mobx";
-import { Comparison, Data, Item, SortType } from "../types";
-import { DIVIDER_CHAR, SPLIT_CHAR } from "./db-store";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction
+} from "mobx";
+import { Comparison, ComparisonData, Data, Item, SortType } from "../types";
+import { AppStore } from "./app-store";
 
 export class List {
   get id() {
@@ -13,7 +19,7 @@ export class List {
   items: Item[] = [];
   comparisons: Comparison[] = [];
 
-  constructor(private data: Data) {
+  constructor(private appStore: AppStore, private data: Data) {
     this.importData(data);
 
     makeObservable(this, {
@@ -22,34 +28,31 @@ export class List {
       description: observable,
       sortType: observable,
       items: observable,
-      comparisons: observable
+      comparisons: observable,
+      addItem: action,
+      removeItem: action
     });
   }
 
   importData = (data: Data) => {
-    const items: Item[] = data.items
-      .split(DIVIDER_CHAR)
-      .reduce((arr: Item[], label, index) => {
-        if (label) {
-          arr.push({
-            key: String(index),
-            label
-          });
-        }
-        return arr;
-      }, []);
-
-    const comparisons: Comparison[] = data.comparisons
-      .split(DIVIDER_CHAR)
-      .reduce((arr: Comparison[], substr) => {
-        const [winnerKey, loserKey] = substr.split(SPLIT_CHAR);
-        const winner = items.find((item) => item.key === winnerKey);
-        const loser = items.find((item) => item.key === loserKey);
-        if (winner && loser) {
-          arr.push({ winner, loser });
-        }
-        return arr;
-      }, []);
+    const items: Item[] = JSON.parse(data.items);
+    const comparisonData: ComparisonData[] = JSON.parse(data.comparisons);
+    const comparisons: Comparison[] = comparisonData.map((comparisonData) => {
+      const left = items.find((item) => item.id === comparisonData.left);
+      const right = items.find((item) => item.id === comparisonData.right);
+      if (!left || !right) {
+        throw new Error("Data invalid");
+      }
+      const winner = comparisonData.pick === "l" ? left : right;
+      const loser = comparisonData.pick === "l" ? right : left;
+      return {
+        left,
+        right,
+        winner,
+        loser,
+        pick: comparisonData.pick
+      };
+    });
 
     this.name = data.name;
     this.description = data.description;
@@ -59,32 +62,47 @@ export class List {
   };
 
   exportList = (): Data => {
-    const highestKey = this.items.reduce((acc, item) => {
-      return Number(item.key) > acc ? Number(item.key) : acc;
-    }, 0);
-
-    let items: string = "";
-
-    for (let i = 1; i <= highestKey; i++) {
-      const item = this.items.find((item) => item.key === String(i));
-      items += `${item?.key ?? ""}${DIVIDER_CHAR}`;
-    }
-
-    const comparisons: string = this.comparisons
-      .map(
-        (comparison) =>
-          `${comparison.winner.key}${SPLIT_CHAR}${comparison.loser.key}`
-      )
-      .join(DIVIDER_CHAR);
+    const comparisons: ComparisonData[] = this.comparisons.map(
+      (comparison) => ({
+        left: comparison.left.id,
+        right: comparison.right.id,
+        pick: comparison.pick
+      })
+    );
 
     return {
       id: this.data.id,
       name: this.name,
       description: this.description,
       sortType: this.sortType,
-      items,
-      comparisons
+      items: JSON.stringify(this.items),
+      comparisons: JSON.stringify(comparisons)
     };
+  };
+
+  get nextId(): string {
+    return String(
+      this.items.reduce((number: number, item) => {
+        const idNum = Number(item.id);
+        if (idNum > number) return idNum;
+        return number;
+      }, 0) + 1
+    );
+  }
+
+  addItem = async (item: Omit<Item, "id">) => {
+    runInAction(() => {
+      this.items.push({
+        id: this.nextId,
+        ...item
+      });
+    });
+    this.appStore.db.update(this.exportList()).catch((x) => console.log(x));
+  };
+
+  removeItem = (item: Item) => {
+    this.items = this.items.filter((existing) => existing.id !== item.id);
+    this.appStore.db.update(this.exportList());
   };
 
   shuffle = () => {
