@@ -64,6 +64,7 @@ export class AppStore {
   };
 
   goToList = (list: List) => {
+    list.shuffle();
     this.currentList = list;
     this.page = "sorting";
   };

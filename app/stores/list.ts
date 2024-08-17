@@ -97,11 +97,15 @@ export class List {
         ...item
       });
     });
-    this.appStore.db.update(this.exportList());
+    this.saveUpdate();
   };
 
   removeItem = (item: Item) => {
     this.items = this.items.filter((existing) => existing.id !== item.id);
+    this.saveUpdate();
+  };
+
+  private saveUpdate = () => {
     this.appStore.db.update(this.exportList());
   };
 
@@ -112,5 +116,6 @@ export class List {
       newArray.splice(index, 0, item);
     });
     this.items = newArray;
+    this.saveUpdate();
   };
 }
