@@ -10,6 +10,8 @@ export class SortStore {
     makeObservable(this, {
       items: computed,
       comparisons: computed,
+      initialRoundItems: computed,
+      initialRound: computed,
       unbeatenItems: computed,
       results: computed,
       choices: computed,
@@ -35,14 +37,51 @@ export class SortStore {
     }, []);
   };
 
+  get initialRoundItems(): Item[] {
+    let powerOfTwo = 1;
+    while (Math.pow(2, powerOfTwo) < this.items.length) {
+      powerOfTwo++;
+    }
+
+    const remainder = this.items.length - Math.pow(2, powerOfTwo - 1);
+    const size = this.items.length / remainder;
+    console.log(remainder, size, this.items.length);
+
+    const items: Item[] = [];
+    for (let i = 0; i < remainder; i++) {
+      const position = Math.floor(i * size);
+      items.push(this.items[position]);
+      items.push(this.items[position + 1]);
+    }
+
+    return items;
+  }
+
+  get initialRound(): Item[] {
+    return this.initialRoundItems.filter((item) => {
+      return this.comparisons.every(
+        ({ winner, loser }) => loser.id !== item.id && winner.id !== item.id
+      );
+    });
+  }
+
   get unbeatenItems() {
     const unsortedItems = this.items.filter((item) => {
       return this.comparisons.every(({ loser }) => loser.id !== item.id);
     });
 
-    return unsortedItems.sort(
-      (itemA, itemB) => this.getWins(itemA).length - this.getWins(itemB).length
-    );
+    return unsortedItems.sort((itemA, itemB) => {
+      let itemAWins = this.getWins(itemA).length;
+      if (this.initialRoundItems.some((item) => item.id === itemA.id)) {
+        itemAWins--;
+      }
+      let itemBWins = this.getWins(itemB).length;
+      if (this.initialRoundItems.some((item) => item.id === itemB.id)) {
+        itemBWins--;
+      }
+
+      return itemAWins - itemBWins;
+    });
   }
 
   get results(): Item[] {
@@ -75,7 +114,11 @@ export class SortStore {
   };
 
   get choices(): Item[] | undefined {
-    if (this.unbeatenItems.length > 1) {
+    if (this.initialRound.length) {
+      const choiceA = this.initialRound[0];
+      const choiceB = this.initialRound[1];
+      if (choiceA && choiceB) return [choiceA, choiceB];
+    } else if (this.unbeatenItems.length > 1) {
       const choiceA = this.unbeatenItems[0];
       const choiceB = this.unbeatenItems[1];
       if (choiceA && choiceB) return [choiceA, choiceB];

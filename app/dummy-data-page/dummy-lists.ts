@@ -1,35 +1,42 @@
 "use client";
 
-import { NewData } from "../types";
+import { Item, NewData } from "../types";
+
+const numbersListItems: Item[] = [];
+
+for (let i = 1; i <= 50; i++) {
+  numbersListItems.push({ id: String(i), name: String(i) });
+}
 
 const numbersList: NewData = {
   name: "Numbers",
   description:
     "Sort the numbers from 1 to 50.  Highest to lowest or lowest to highest - your choice",
-  items: "[",
-  comparisons: "[]",
+  items: JSON.stringify(numbersListItems),
+  comparisons: JSON.stringify([]),
   sortType: "tournament"
 };
 
-for (let i = 1; i <= 50; i++) {
-  numbersList.items +=
-    JSON.stringify({ id: String(i), name: String(i) }) + ", ";
+const moreNumbersListItems: Item[] = [];
+
+const fourHundredNumbers: number[] = [];
+
+for (let i = 1; i <= 400; i++) {
+  fourHundredNumbers.push(i);
 }
-numbersList.items += "]";
+
+for (let i = 1; i <= 100; i++) {
+  const index = Math.floor(Math.random() * fourHundredNumbers.length);
+  const num = fourHundredNumbers.splice(index, 1)[0];
+  moreNumbersListItems.push({ id: String(num), name: String(num) });
+}
 
 const moreNumbersList: NewData = {
   name: "More numbers",
   description: "Is 50 not enough? How about going for 100!",
-  items: "[",
-  comparisons: "[]",
+  items: JSON.stringify(moreNumbersListItems),
+  comparisons: JSON.stringify([]),
   sortType: "tournament"
 };
-
-for (let i = 1; i <= 100; i++) {
-  moreNumbersList.items +=
-    JSON.stringify({ id: String(i), name: String(i) }) + ", ";
-}
-
-moreNumbersList.items += "]";
 
 export const dummyLists: NewData[] = [numbersList, moreNumbersList];

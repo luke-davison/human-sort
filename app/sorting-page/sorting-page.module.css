@@ -1,0 +1,41 @@
+.sortingPage {
+  display: flex;
+  flex-direction: column;
+}
+
+.sortingPage > *:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.sortingPageChoices {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.sortingPageChoice {
+  min-height: 90px;
+  min-width: 200px;
+  font-size: 40px;
+}
+
+.sortingPageTitle {
+  text-align: center;
+}
+
+.sortingPageAdditionalButtons {
+  display: flex;
+  justify-content: center;
+}
+
+.sortingPageInstructions {
+  text-align: center;
+}
+
+.sortingPageOutputs {
+  display: flex;
+}
+
+.sortingPageOutputs > * {
+  flex: 1;
+}

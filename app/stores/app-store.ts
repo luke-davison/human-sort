@@ -66,7 +66,7 @@ export class AppStore {
   };
 
   goToList = (list: List) => {
-    list.shuffle();
+    list.shuffle(); // To remove
     this.currentList = list;
     this.page = "sorting";
   };

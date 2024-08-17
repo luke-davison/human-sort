@@ -5,17 +5,19 @@ import { useAppStore } from "../hooks/use-app-store";
 import styles from "./site-header.module.css";
 
 export const SiteHeader = observer(() => {
-  const { returnToLanding } = useAppStore();
+  const { returnToLanding, page } = useAppStore();
 
   return (
     <div className={styles.siteHeader}>
       <a className={styles.siteTitle} onClick={returnToLanding}>
         Human sort
       </a>
-      <div className={styles.siteDescription}>
-        Why develop AI or algorithms to sort your data when you can get humans
-        to do it?
-      </div>
+      {page === "landing" && (
+        <div className={styles.siteDescription}>
+          Why develop AI or algorithms to sort your data when you can get humans
+          to do it?
+        </div>
+      )}
     </div>
   );
 });
