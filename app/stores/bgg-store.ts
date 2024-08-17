@@ -31,9 +31,9 @@ interface ParsedXMLSearch {
 export class BggStore {
   convertParsedSearchItem = (item: ParsedXMLSearchItem): BggSearchItem => {
     return {
-      id: item["@_id"],
+      bggId: item["@_id"],
       name: item.name["@_value"],
-      year: item.yearpublished?.["@_value"]
+      bggYear: item.yearpublished?.["@_value"]
     };
   };
 
@@ -50,7 +50,7 @@ export class BggStore {
 
   get = async (item: BggSearchItem): Promise<BoardGame> => {
     const response = await fetch(
-      `https://boardgamegeek.com/xmlapi2/thing?id=${item.id}`
+      `https://boardgamegeek.com/xmlapi2/thing?id=${item.bggId}`
     );
 
     const textResult = await response.text();
@@ -59,7 +59,7 @@ export class BggStore {
 
     return {
       ...item,
-      image: parsedResult.items.item.image
+      bggImage: parsedResult.items.item.image
     };
   };
 }

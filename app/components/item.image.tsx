@@ -1,3 +1,5 @@
+"use client";
+
 import { observer } from "mobx-react";
 import { FC } from "react";
 import { Item } from "../types";

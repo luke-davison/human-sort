@@ -1,9 +1,6 @@
-export interface Item {
+export interface Item extends Partial<Omit<BoardGame, "name">> {
   id: string;
   name: string;
-  bggId?: string;
-  bggYear?: string;
-  bggImage?: string;
   deleted?: boolean;
 }
 
@@ -37,11 +34,11 @@ export type SortType = "tournament";
 export type Page = "landing" | "listing" | "dummying" | "sorting" | "uploading";
 
 export interface BggSearchItem {
-  id: string;
+  bggId: string;
   name: string;
-  year: string | undefined;
+  bggYear: string | undefined;
 }
 
 export interface BoardGame extends BggSearchItem {
-  image: string;
+  bggImage: string;
 }

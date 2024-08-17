@@ -1,0 +1,10 @@
+.boardgameAdd {
+  position: relative;
+}
+
+.boardgameAddModal {
+  background-color: lightblue;
+  position: absolute;
+  top: 100%;
+  z-index: 1;
+}
