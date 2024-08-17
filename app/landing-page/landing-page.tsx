@@ -11,12 +11,13 @@ export const LandingPage = observer(() => {
   return (
     <div className={styles.landingPage}>
       <div className={styles.optionsList}>
-        <a className="landing-page-option" onClick={startNewList}>
+        <div>Start from scratch</div>
+        <button className="landing-page-option" onClick={startNewList}>
           Create and sort a new list
-        </a>
-        <a className="landing-page-option" onClick={startADummyList}>
+        </button>
+        <button className="landing-page-option" onClick={startADummyList}>
           Sort a list of example data
-        </a>
+        </button>
       </div>
 
       <LandingPageLists />

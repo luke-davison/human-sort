@@ -20,11 +20,13 @@ export class AppStore {
     makeObservable(this, {
       listsLoaded: observable,
       page: observable,
+      lists: observable,
       currentList: observable,
       goToList: action,
       startNewList: action,
       startADummyList: action,
-      returnToLanding: action
+      returnToLanding: action,
+      deleteList: action
     });
   }
 
@@ -95,5 +97,10 @@ export class AppStore {
   returnToLanding = () => {
     this.currentList = undefined;
     this.page = "landing";
+  };
+
+  deleteList = (list: List) => {
+    this.db.delete(list.id);
+    this.lists = this.lists.filter((existing) => existing.id !== list.id);
   };
 }

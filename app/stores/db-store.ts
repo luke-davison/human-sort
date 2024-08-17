@@ -80,6 +80,25 @@ export class DBStore {
     });
   };
 
+  delete = (dataId: number) => {
+    return new Promise<void>((resolve, reject) => {
+      if (this.db) {
+        const transaction = this.db.transaction(STORENAME, "readwrite");
+        const objectStore = transaction.objectStore(STORENAME);
+
+        const request = objectStore.delete(dataId);
+        request.onsuccess = () => {
+          resolve();
+        };
+        request.onerror = () => {
+          reject("Delete error");
+        };
+      } else {
+        reject("No database");
+      }
+    });
+  };
+
   getAll = () => {
     return new Promise<Data[]>((resolve, reject) => {
       if (this.db) {
