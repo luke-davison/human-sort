@@ -23,7 +23,6 @@ const refineSearchResult = (
     const bBeginsWithStr = resultB.name
       .toLowerCase()
       .startsWith(searchString.toLowerCase());
-    console.log(aBeginsWithStr, bBeginsWithStr);
 
     if (aBeginsWithStr && !bBeginsWithStr) return -1;
     if (bBeginsWithStr && !aBeginsWithStr) return 1;

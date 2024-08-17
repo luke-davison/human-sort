@@ -97,7 +97,7 @@ export class List {
         ...item
       });
     });
-    this.appStore.db.update(this.exportList()).catch((x) => console.log(x));
+    this.appStore.db.update(this.exportList());
   };
 
   removeItem = (item: Item) => {
