@@ -6,8 +6,8 @@ import { Item } from "../types";
 
 export const RunTrialsButton = observer(() => {
   const onClick = () => {
-    const numOfTrials = 50;
-    const listSize = 30;
+    const numOfTrials = 100;
+    const listSize = 20;
     const resultsArr: number[] = [];
 
     const generateSortStore = () => {
@@ -52,8 +52,10 @@ export const RunTrialsButton = observer(() => {
 
     const arr = resultsArr.sort();
     const sum = arr.reduce((sum, num) => sum + num, 0);
-    console.log("");
+    console.log(" ");
+    console.log(listSize, "items");
     console.log(sum / arr.length);
+    console.log(numOfTrials, "number of trials");
     console.log(arr);
   };
 

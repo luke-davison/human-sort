@@ -7,6 +7,7 @@ import { useAppStore } from "../hooks/use-app-store";
 import { SortStoreContext } from "../hooks/use-sort-store";
 import { ItemImage } from "../components/item.image";
 import styles from "./sorting-page.module.css";
+import { getEstimatedComparisons } from "./get-estimated-comparisons";
 
 export const SortingPage = observer(() => {
   const appStore = useAppStore();
@@ -63,8 +64,7 @@ export const SortingPage = observer(() => {
           <div className="sorting-page-comparisons">
             <div>
               Comparisons made - {comparisons.length} /{" "}
-              {Math.floor(Math.log(list.items.length) * list.items.length)}{" "}
-              (approx)
+              {getEstimatedComparisons(list.items.length)} (approx)
             </div>
             {comparisons.map((comparison, index) => (
               <div key={index} className="sorting-page-comparison">

@@ -10,22 +10,18 @@ export const LandingPage = observer(() => {
   const { startNewList, startADummyList } = useAppStore();
 
   return (
-    <>
-      <div className={styles.landingPage}>
-        <div className={styles.optionsList}>
-          <div>Start from scratch</div>
-          <button className="landing-page-option" onClick={startNewList}>
-            Create and sort a new list
-          </button>
-          <button className="landing-page-option" onClick={startADummyList}>
-            Sort a list of example data
-          </button>
-        </div>
-
-        <LandingPageLists />
+    <div className={styles.landingPage}>
+      <div className={styles.optionsList}>
+        <div>Start from scratch</div>
+        <button className="landing-page-option" onClick={startNewList}>
+          Create and sort a new list
+        </button>
+        <button className="landing-page-option" onClick={startADummyList}>
+          Sort a list of example data
+        </button>
       </div>
 
-      <RunTrialsButton />
-    </>
+      <LandingPageLists />
+    </div>
   );
 });
