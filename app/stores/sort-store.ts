@@ -45,7 +45,6 @@ export class SortStore {
 
     const remainder = this.items.length - Math.pow(2, powerOfTwo - 1);
     const size = this.items.length / remainder;
-    console.log(remainder, size, this.items.length);
 
     const items: Item[] = [];
     for (let i = 0; i < remainder; i++) {
