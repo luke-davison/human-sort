@@ -14,9 +14,13 @@
 }
 
 .sortingPageChoice {
-  min-height: 90px;
-  min-width: 200px;
-  font-size: 40px;
+  min-height: 140px;
+  min-width: 300px;
+  font-size: 10px;
+}
+
+.sortingPageChoices input {
+  width: 300px;
 }
 
 .sortingPageTitle {

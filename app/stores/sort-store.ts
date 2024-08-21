@@ -2,8 +2,9 @@
 
 import { action, computed, makeObservable, observable } from "mobx";
 import { AppStore } from "./app-store";
-import { Comparison, Item } from "../types";
+import { Comparison } from "../types";
 import { List } from "./list";
+import { Item } from "./item";
 
 export class SortStore {
   constructor(private appStore: AppStore, public list: List) {

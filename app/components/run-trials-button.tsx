@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import { SortStore } from "../stores/sort-store";
 import { List } from "../stores/list";
 import { AppStore } from "../stores/app-store";
-import { Item } from "../types";
+import { Item } from "../stores/item";
 
 export const RunTrialsButton = observer(() => {
   const onClick = () => {
@@ -18,7 +18,7 @@ export const RunTrialsButton = observer(() => {
 
       const items: Item[] = [];
       for (let i = 1; i <= listSize; i++) {
-        items.push({ id: String(i), name: String(i) });
+        items.push(new Item({ id: String(i), name: String(i) }));
       }
 
       const list = new List(appStore, {

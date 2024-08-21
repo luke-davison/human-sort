@@ -1,11 +1,12 @@
 "use client";
 
-import { Item, NewData } from "../types";
+import { Item } from "../stores/item";
+import { NewData } from "../types";
 
 const numbersListItems: Item[] = [];
 
 for (let i = 1; i <= 50; i++) {
-  numbersListItems.push({ id: String(i), name: String(i) });
+  numbersListItems.push(new Item({ id: String(i), name: String(i) }));
 }
 
 const numbersList: NewData = {
@@ -28,7 +29,7 @@ for (let i = 1; i <= 400; i++) {
 for (let i = 1; i <= 100; i++) {
   const index = Math.floor(Math.random() * fourHundredNumbers.length);
   const num = fourHundredNumbers.splice(index, 1)[0];
-  moreNumbersListItems.push({ id: String(num), name: String(num) });
+  moreNumbersListItems.push(new Item({ id: String(num), name: String(num) }));
 }
 
 const moreNumbersList: NewData = {

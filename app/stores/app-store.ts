@@ -66,7 +66,9 @@ export class AppStore {
   };
 
   goToList = (list: List) => {
-    list.shuffle(); // To remove
+    if (list.comparisons.length === 0) {
+      list.shuffle();
+    }
     this.currentList = list;
     this.page = "sorting";
   };

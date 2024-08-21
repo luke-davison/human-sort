@@ -1,0 +1,45 @@
+.listingPage {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.listingPageMain {
+  display: flex;
+  gap: 25px;
+}
+
+.listingPageMain > * {
+  flex: 1;
+}
+
+.listingPageAddItemsButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.listingPageDetails {
+  display: flex;
+  gap: 25px;
+}
+
+.listingPageAddSubsection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listingPageAddItems {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.descriptionInput {
+  width: 400px;
+}
+
+.lstingPageAddItemsInput {
+  height: 90px;
+}

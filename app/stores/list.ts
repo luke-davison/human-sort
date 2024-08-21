@@ -1,12 +1,7 @@
-import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  runInAction
-} from "mobx";
-import { Comparison, ComparisonData, Data, Item, SortType } from "../types";
+import { action, computed, makeObservable, observable } from "mobx";
+import { Comparison, ComparisonData, Data, ItemData, SortType } from "../types";
 import { AppStore } from "./app-store";
+import { Item } from "./item";
 
 export class List {
   get id() {
@@ -30,12 +25,15 @@ export class List {
       items: observable,
       comparisons: observable,
       addItem: action,
+      updateList: action,
       removeItem: action
     });
   }
 
   importData = (data: Data) => {
-    const items: Item[] = JSON.parse(data.items);
+    const items: Item[] = JSON.parse(data.items).map(
+      (itemData: ItemData) => new Item(itemData)
+    );
     const comparisonData: ComparisonData[] = JSON.parse(data.comparisons);
     const comparisons: Comparison[] = comparisonData.map((comparisonData) => {
       const left = items.find((item) => item.id === comparisonData.left);
@@ -90,13 +88,25 @@ export class List {
     );
   }
 
-  addItem = async (item: Omit<Item, "id">) => {
-    runInAction(() => {
-      this.items.push({
+  updateList = (list: Partial<Data>) => {
+    if (list.name !== undefined) {
+      this.name = list.name;
+    }
+
+    if (list.description !== undefined) {
+      this.description = list.description;
+    }
+
+    this.saveUpdate();
+  };
+
+  addItem = (item: Omit<ItemData, "id">) => {
+    this.items.push(
+      new Item({
         id: this.nextId,
         ...item
-      });
-    });
+      })
+    );
     this.saveUpdate();
   };
 
@@ -105,8 +115,13 @@ export class List {
     this.saveUpdate();
   };
 
-  private saveUpdate = () => {
-    this.appStore.db.update(this.exportList());
+  timeout: number = 0;
+
+  saveUpdate = () => {
+    window.clearTimeout(this.timeout);
+    this.timeout = window.setTimeout(() => {
+      this.appStore.db.update(this.exportList());
+    }, 1000);
   };
 
   shuffle = () => {

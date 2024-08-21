@@ -8,6 +8,8 @@ import { SortStoreContext } from "../hooks/use-sort-store";
 import { ItemImage } from "../components/item.image";
 import styles from "./sorting-page.module.css";
 import { getEstimatedComparisons } from "./get-estimated-comparisons";
+import { action } from "mobx";
+import { Item } from "../stores/item";
 
 export const SortingPage = observer(() => {
   const appStore = useAppStore();
@@ -22,6 +24,11 @@ export const SortingPage = observer(() => {
   const left = choices && choices.length > 1 ? choices[0] : undefined;
   const right = choices && choices.length > 1 ? choices[1] : undefined;
 
+  const onChangeChoiceName = action((choice: Item, name: string) => {
+    choice.name = name;
+    sortStore.list.saveUpdate();
+  });
+
   return (
     <SortStoreContext.Provider value={sortStore}>
       <div className={styles.sortingPage}>
@@ -30,21 +37,35 @@ export const SortingPage = observer(() => {
         <div className={styles.sortingPageChoices}>
           {left && right && (
             <>
-              <button
-                className={styles.sortingPageChoice}
-                onClick={() => submit(left, right, "l")}
-              >
-                <div>{left.name}</div>
-                <ItemImage item={left} />
-              </button>
+              <div>
+                <input
+                  value={left.name}
+                  onChange={(event) =>
+                    onChangeChoiceName(left, event.target.value)
+                  }
+                />
+                <button
+                  className={styles.sortingPageChoice}
+                  onClick={() => submit(left, right, "l")}
+                >
+                  <ItemImage item={left} />
+                </button>
+              </div>
               <div>or</div>
-              <button
-                className={styles.sortingPageChoice}
-                onClick={() => submit(left, right, "r")}
-              >
-                <div>{right.name}</div>
-                <ItemImage item={right} />
-              </button>
+              <div>
+                <input
+                  value={right.name}
+                  onChange={(event) =>
+                    onChangeChoiceName(right, event.target.value)
+                  }
+                />
+                <button
+                  className={styles.sortingPageChoice}
+                  onClick={() => submit(left, right, "r")}
+                >
+                  <ItemImage item={right} />
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -66,15 +87,18 @@ export const SortingPage = observer(() => {
               Comparisons made - {comparisons.length} /{" "}
               {getEstimatedComparisons(list.items.length)} (approx)
             </div>
-            {comparisons.map((comparison, index) => (
-              <div key={index} className="sorting-page-comparison">
-                {index + 1}
-                {". "}
-                {comparison.left.name}
-                {comparison.pick === "l" ? " > " : " < "}
-                {comparison.right.name}
-              </div>
-            ))}
+            {comparisons
+              .slice(-20)
+              .reverse()
+              .map((comparison, index) => (
+                <div key={index} className="sorting-page-comparison">
+                  {comparisons.length - index}
+                  {". "}
+                  {comparison.left.name}
+                  {comparison.pick === "l" ? " > " : " < "}
+                  {comparison.right.name}
+                </div>
+              ))}
           </div>
           <div className="sorting-page-results">
             {results.length > 0 && (

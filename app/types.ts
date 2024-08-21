@@ -1,6 +1,9 @@
-export interface Item extends Partial<Omit<BoardGame, "name">> {
+import { Item } from "./stores/item";
+
+export interface ItemData extends Partial<Omit<BoardGame, "name">> {
   id: string;
   name: string;
+  image?: string;
   deleted?: boolean;
 }
 

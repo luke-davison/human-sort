@@ -59,6 +59,7 @@ export const BoardGameAdd: FC<BoardGameAddProps> = observer(({ onAdd }) => {
     <div className={styles.boardgameAdd}>
       <input
         value={searchValue}
+        placeholder="Search BoardGameGeek..."
         onChange={(event) => setSearchValue(event.target.value)}
       />
 
