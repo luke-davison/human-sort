@@ -38,8 +38,25 @@
 
 .sortingPageOutputs {
   display: flex;
+  gap: 20px;
 }
 
 .sortingPageOutputs > * {
   flex: 1;
+}
+
+.sortingPageResults {
+  display: flex;
+  flex-direction: column;
+}
+
+.sortingPageResult {
+  display: flex;
+  gap: 8px;
+  padding: 12px 4px;
+  border-bottom: 1px solid gray;
+}
+
+.sortingPageResultName {
+  flex-grow: 1;
 }

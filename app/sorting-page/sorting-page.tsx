@@ -83,40 +83,49 @@ export const SortingPage = observer(() => {
         </div>
 
         <div className={styles.sortingPageOutputs}>
-          <div className="sorting-page-comparisons">
+          <div>
             <div>
               Comparisons made - {comparisons.length} /{" "}
               {getEstimatedComparisons(list.items.length)} (approx)
             </div>
-            {comparisons
-              .slice(-20)
-              .reverse()
-              .map((comparison, index) => (
-                <div key={index} className="sorting-page-comparison">
-                  {comparisons.length - index}
-                  {". "}
-                  {comparison.left.name}
-                  {comparison.pick === "l" ? " > " : " < "}
-                  {comparison.right.name}
-                </div>
-              ))}
-          </div>
-          <div className="sorting-page-results">
-            {results.length > 0 && (
-              <>
-                <div>
-                  Results - {results.length} / {list.items.length}
-                </div>
-                {results.map((result, index) => (
-                  <div key={result.id} className="sorting-page-result">
-                    {index + 1}
+            <div className={styles.sortingPageResults}>
+              {comparisons
+                .slice(-20)
+                .reverse()
+                .map((comparison, index) => (
+                  <div key={index} className={styles.sortingPageResult}>
+                    {comparisons.length - index}
                     {". "}
-                    {result.name}
-                    <span onClick={() => redoResult(result)}>Redo</span>
+                    {comparison.left.name}
+                    {comparison.pick === "l" ? " > " : " < "}
+                    {comparison.right.name}
                   </div>
                 ))}
-              </>
-            )}
+            </div>
+          </div>
+          <div>
+            <div>
+              Results - {results.length} / {list.items.length}
+            </div>
+
+            <div className={styles.sortingPageResults}>
+              {results.length > 0 && (
+                <>
+                  {results.map((result, index) => (
+                    <div key={result.id} className={styles.sortingPageResult}>
+                      <span>
+                        {index + 1}
+                        {". "}
+                      </span>
+                      <span className={styles.sortingPageResultName}>
+                        {result.name}
+                      </span>
+                      <span onClick={() => redoResult(result)}>Redo</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
