@@ -13,6 +13,7 @@ export class List {
   sortType: SortType = "tournament";
   items: Item[] = [];
   comparisons: Comparison[] = [];
+  discarded: Comparison[] = [];
 
   constructor(private appStore: AppStore, private data: Data) {
     this.importData(data);
@@ -34,8 +35,18 @@ export class List {
     const items: Item[] = JSON.parse(data.items).map(
       (itemData: ItemData) => new Item(itemData)
     );
-    const comparisonData: ComparisonData[] = JSON.parse(data.comparisons);
-    const comparisons: Comparison[] = comparisonData.map((comparisonData) => {
+
+    this.name = data.name;
+    this.description = data.description;
+    this.sortType = data.sortType;
+    this.items = items;
+    this.comparisons = this.importComparisons(data.comparisons, items);
+    this.discarded = this.importComparisons(data.discarded, items);
+  };
+
+  importComparisons = (comparisonsStr: string, items: Item[]): Comparison[] => {
+    const comparisonData: ComparisonData[] = JSON.parse(comparisonsStr);
+    return comparisonData.map((comparisonData) => {
       const left = items.find((item) => item.id === comparisonData.left);
       const right = items.find((item) => item.id === comparisonData.right);
       if (!left || !right) {
@@ -51,31 +62,28 @@ export class List {
         pick: comparisonData.pick
       };
     });
-
-    this.name = data.name;
-    this.description = data.description;
-    this.sortType = data.sortType;
-    this.items = items;
-    this.comparisons = comparisons;
   };
 
   exportList = (): Data => {
-    const comparisons: ComparisonData[] = this.comparisons.map(
-      (comparison) => ({
-        left: comparison.left.id,
-        right: comparison.right.id,
-        pick: comparison.pick
-      })
-    );
-
     return {
       id: this.data.id,
       name: this.name,
       description: this.description,
       sortType: this.sortType,
-      items: JSON.stringify(this.items),
-      comparisons: JSON.stringify(comparisons)
+      items: JSON.stringify(this.items.map((item) => item.export())),
+      comparisons: this.exportComparisons(this.comparisons),
+      discarded: this.exportComparisons(this.discarded)
     };
+  };
+
+  exportComparisons = (comparisons: Comparison[]): string => {
+    const comparisonData: ComparisonData[] = comparisons.map((comparison) => ({
+      left: comparison.left.id,
+      right: comparison.right.id,
+      pick: comparison.pick
+    }));
+
+    return JSON.stringify(comparisonData);
   };
 
   get nextId(): string {

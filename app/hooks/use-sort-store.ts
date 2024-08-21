@@ -13,8 +13,9 @@ const store = new SortStore(
     name: "",
     description: "",
     sortType: "tournament",
-    items: "[]",
-    comparisons: "[]"
+    items: JSON.stringify([]),
+    comparisons: JSON.stringify([]),
+    discarded: JSON.stringify([])
   })
 );
 

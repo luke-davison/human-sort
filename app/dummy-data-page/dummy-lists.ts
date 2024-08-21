@@ -5,7 +5,7 @@ import { NewData } from "../types";
 
 const numbersListItems: Item[] = [];
 
-for (let i = 1; i <= 50; i++) {
+for (let i = 1; i <= 10; i++) {
   numbersListItems.push(new Item({ id: String(i), name: String(i) }));
 }
 
@@ -15,6 +15,7 @@ const numbersList: NewData = {
     "Sort the numbers from 1 to 50.  Highest to lowest or lowest to highest - your choice",
   items: JSON.stringify(numbersListItems),
   comparisons: JSON.stringify([]),
+  discarded: JSON.stringify([]),
   sortType: "tournament"
 };
 
@@ -37,6 +38,7 @@ const moreNumbersList: NewData = {
   description: "Is 50 not enough? How about going for 100!",
   items: JSON.stringify(moreNumbersListItems),
   comparisons: JSON.stringify([]),
+  discarded: JSON.stringify([]),
   sortType: "tournament"
 };
 

@@ -19,7 +19,8 @@ export const SortingPage = observer(() => {
     [appStore]
   );
 
-  const { choices, submit, undo, results, comparisons, list } = sortStore;
+  const { choices, submit, undo, results, comparisons, list, redoResult } =
+    sortStore;
 
   const left = choices && choices.length > 1 ? choices[0] : undefined;
   const right = choices && choices.length > 1 ? choices[1] : undefined;
@@ -111,6 +112,7 @@ export const SortingPage = observer(() => {
                     {index + 1}
                     {". "}
                     {result.name}
+                    <span onClick={() => redoResult(result)}>Redo</span>
                   </div>
                 ))}
               </>

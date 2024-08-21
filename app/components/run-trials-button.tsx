@@ -27,6 +27,7 @@ export const RunTrialsButton = observer(() => {
         description: "",
         items: JSON.stringify(items),
         comparisons: JSON.stringify([]),
+        discarded: JSON.stringify([]),
         sortType: "tournament"
       });
 

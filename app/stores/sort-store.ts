@@ -1,6 +1,12 @@
 "use client";
 
-import { action, computed, makeObservable, observable } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction
+} from "mobx";
 import { AppStore } from "./app-store";
 import { Comparison } from "../types";
 import { List } from "./list";
@@ -131,14 +137,54 @@ export class SortStore {
   }
 
   submit = (left: Item, right: Item, pick: "l" | "r") => {
-    const winner = pick === "l" ? left : right;
-    const loser = pick === "l" ? right : left;
-    this.list.comparisons.push({ winner, loser, pick, left, right });
+    runInAction(() => {
+      const winner = pick === "l" ? left : right;
+      const loser = pick === "l" ? right : left;
+      this.list.comparisons.push({ winner, loser, pick, left, right });
+    });
+
+    const newChoiceA = this.choices?.[0];
+    const newChoiceB = this.choices?.[1];
+
+    if (newChoiceA && newChoiceB) {
+      const discardedIndex = this.list.discarded.findIndex(
+        (discardedComparison) =>
+          (discardedComparison.left.id === newChoiceA.id &&
+            discardedComparison.right.id === newChoiceB.id) ||
+          (discardedComparison.left.id === newChoiceB.id &&
+            discardedComparison.right.id === newChoiceA.id)
+      );
+
+      if (discardedIndex !== -1) {
+        const discardedComparison = this.list.discarded[discardedIndex];
+        const { left, right, pick } = discardedComparison;
+        this.list.discarded.splice(discardedIndex, 1);
+        this.submit(left, right, pick);
+        return;
+      }
+    }
+
     this.appStore.saveList(this.list);
   };
 
   undo = () => {
     this.list.comparisons.pop();
     this.appStore.saveList(this.list);
+  };
+
+  redoResult = (item: Item) => {
+    const firstComparisonIndex = this.comparisons.findIndex(
+      (comparison) =>
+        comparison.left.id === item.id || comparison.right.id === item.id
+    );
+    if (firstComparisonIndex !== -1) {
+      const discarded = this.comparisons
+        .splice(firstComparisonIndex)
+        .filter(
+          (comparison) =>
+            comparison.left.id !== item.id && comparison.right.id !== item.id
+        );
+      this.list.discarded.push(...discarded);
+    }
   };
 }

@@ -37,6 +37,7 @@ export class DBStore {
         objectStore.createIndex("comparisons", "comparisons", {
           unique: false
         });
+        objectStore.createIndex("discarded", "discared", { unique: false });
       };
     });
   };

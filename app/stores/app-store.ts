@@ -49,7 +49,8 @@ export class AppStore {
       name,
       description: "",
       items: "[]",
-      comparisons: "[]",
+      comparisons: JSON.stringify([]),
+      discarded: JSON.stringify([]),
       sortType: "tournament",
       ...rest
     });

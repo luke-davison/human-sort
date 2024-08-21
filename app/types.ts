@@ -28,6 +28,7 @@ export interface Data {
   items: string;
   comparisons: string;
   sortType: SortType;
+  discarded: string;
 }
 
 export type NewData = Omit<Data, "id">;
