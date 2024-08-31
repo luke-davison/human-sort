@@ -3,7 +3,6 @@
 import { AppStore } from "./stores/app-store";
 import { AppStoreContext } from "./hooks/use-app-store";
 import { useMemo } from "react";
-import { Page } from "./components/page";
 import { App } from "./app";
 
 export default function Home() {
@@ -11,9 +10,7 @@ export default function Home() {
 
   return (
     <AppStoreContext.Provider value={appStore}>
-      <Page>
-        <App />
-      </Page>
+      <App />
     </AppStoreContext.Provider>
   );
 }

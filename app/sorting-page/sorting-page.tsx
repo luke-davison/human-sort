@@ -1,7 +1,7 @@
 "use client";
 
 import { observer } from "mobx-react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { SortStore } from "../stores/sort-store";
 import { useAppStore } from "../hooks/use-app-store";
 import { SortStoreContext } from "../hooks/use-sort-store";
@@ -11,6 +11,7 @@ import { getEstimatedComparisons } from "./get-estimated-comparisons";
 import { action } from "mobx";
 import { Item } from "../stores/item";
 import { ChangeableText } from "../components/changeable-text";
+import { SiteHeader } from "../components/site-header";
 
 const getFontSize = (value: string) => {
   if (value.length < 50) return 24;
@@ -26,6 +27,9 @@ export const SortingPage = observer(() => {
     [appStore]
   );
 
+  const resultsListRef = useRef<HTMLDivElement | null>(null);
+  const comparisonsListRef = useRef<HTMLDivElement | null>(null);
+
   const { choices, submit, undo, results, comparisons, list, redoResult } =
     sortStore;
 
@@ -37,101 +41,121 @@ export const SortingPage = observer(() => {
     sortStore.list.saveUpdate();
   });
 
+  const scrollToResults = () => {
+    resultsListRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToComaprisons = () => {
+    comparisonsListRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <SortStoreContext.Provider value={sortStore}>
-      <div className={styles.sortingPage}>
-        <div className={styles.sortingPageTitle}>Which is better?</div>
+      <div className={styles.sortingPageTopContainer}>
+        <div className={styles.sortingPageTopInner}>
+          <SiteHeader />
+          <div className={styles.sortingPageTitle}>Which is better?</div>
 
-        <div className={styles.sortingPageChoices}>
-          {left && right && (
+          <div className={styles.sortingPageChoices}>
+            {left && right && (
+              <>
+                <div>
+                  <button
+                    className={styles.sortingPageChoice}
+                    style={{ fontSize: getFontSize(left.name) }}
+                    onClick={() => submit(left, right, "l")}
+                  >
+                    <ChangeableText
+                      value={left.name}
+                      onChange={(value) => onChangeChoiceName(left, value)}
+                    />
+                    <ItemImage item={left} />
+                  </button>
+                </div>
+                <div>or</div>
+                <div>
+                  <button
+                    className={styles.sortingPageChoice}
+                    style={{ fontSize: getFontSize(right.name) }}
+                    onClick={() => submit(left, right, "r")}
+                  >
+                    <ChangeableText
+                      value={right.name}
+                      onChange={(value) => onChangeChoiceName(right, value)}
+                    />
+                    <ItemImage item={right} />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+          <div className={styles.sortingPageAdditionalButtons}>
+            <button className="sorting-page-undo" onClick={undo}>
+              Undo
+            </button>
+          </div>
+          <div className={styles.sortingPageInstructions}>
+            The left and right arrows can be used if desired. The up arrow
+            undoes the most recent selection.
+          </div>
+        </div>
+        <div className={styles.linksToLists}>
+          {comparisons.length > 0 && (
+            <button onClick={scrollToComaprisons}>
+              Comparisons - {comparisons.length}
+            </button>
+          )}
+          {results.length > 0 && (
+            <button onClick={scrollToResults}>
+              Results - {results.length}
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div ref={resultsListRef}>
+        <div>
+          Results - {results.length} / {list.items.length}
+        </div>
+
+        <div className={styles.sortingPageResults}>
+          {results.length > 0 && (
             <>
-              <div>
-                <button
-                  className={styles.sortingPageChoice}
-                  style={{ fontSize: getFontSize(left.name) }}
-                  onClick={() => submit(left, right, "l")}
-                >
-                  <ChangeableText
-                    value={left.name}
-                    onChange={(value) => onChangeChoiceName(left, value)}
-                  />
-                  <ItemImage item={left} />
-                </button>
-              </div>
-              <div>or</div>
-              <div>
-                <button
-                  className={styles.sortingPageChoice}
-                  style={{ fontSize: getFontSize(right.name) }}
-                  onClick={() => submit(left, right, "r")}
-                >
-                  <ChangeableText
-                    value={right.name}
-                    onChange={(value) => onChangeChoiceName(right, value)}
-                  />
-                  <ItemImage item={right} />
-                </button>
-              </div>
+              {results.map((result, index) => (
+                <div key={result.id} className={styles.sortingPageResult}>
+                  <span>
+                    {index + 1}
+                    {". "}
+                  </span>
+                  <span className={styles.sortingPageResultName}>
+                    {result.name}
+                  </span>
+                  <button onClick={() => redoResult(result)}>x</button>
+                </div>
+              ))}
             </>
           )}
         </div>
+      </div>
 
-        <div className={styles.sortingPageAdditionalButtons}>
-          <button className="sorting-page-undo" onClick={undo}>
-            Undo
-          </button>
+      <div ref={comparisonsListRef}>
+        <div>
+          Comparisons made - {comparisons.length} /{" "}
+          {getEstimatedComparisons(list.items.length)} (approx)
         </div>
-
-        <div className={styles.sortingPageInstructions}>
-          The left and right arrows can be used if desired. The up arrow undoes
-          the most recent selection.
-        </div>
-
-        <div className={styles.sortingPageOutputs}>
-          <div>
-            <div>
-              Comparisons made - {comparisons.length} /{" "}
-              {getEstimatedComparisons(list.items.length)} (approx)
-            </div>
-            <div className={styles.sortingPageResults}>
-              {comparisons
-                .slice(-20)
-                .reverse()
-                .map((comparison, index) => (
-                  <div key={index} className={styles.sortingPageResult}>
-                    {comparisons.length - index}
-                    {". "}
-                    {comparison.left.name}
-                    {comparison.pick === "l" ? " > " : " < "}
-                    {comparison.right.name}
-                  </div>
-                ))}
-            </div>
-          </div>
-          <div>
-            <div>
-              Results - {results.length} / {list.items.length}
-            </div>
-
-            <div className={styles.sortingPageResults}>
-              {results.length > 0 && (
-                <>
-                  {results.map((result, index) => (
-                    <div key={result.id} className={styles.sortingPageResult}>
-                      <span>
-                        {index + 1}
-                        {". "}
-                      </span>
-                      <span className={styles.sortingPageResultName}>
-                        {result.name}
-                      </span>
-                      <button onClick={() => redoResult(result)}>x</button>
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
-          </div>
+        <div className={styles.sortingPageResults}>
+          {comparisons
+            .slice(-20)
+            .reverse()
+            .map((comparison, index) => (
+              <div key={index} className={styles.sortingPageResult}>
+                {comparisons.length - index}
+                {". "}
+                {comparison.left.name}
+                {comparison.pick === "l" ? " > " : " < "}
+                {comparison.right.name}
+              </div>
+            ))}
         </div>
       </div>
     </SortStoreContext.Provider>
