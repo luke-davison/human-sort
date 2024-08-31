@@ -147,18 +147,13 @@ export class SortStore {
     const newChoiceB = this.choices?.[1];
 
     if (newChoiceA && newChoiceB) {
-      const discardedIndex = this.list.discarded.findIndex(
-        (discardedComparison) =>
-          (discardedComparison.left.id === newChoiceA.id &&
-            discardedComparison.right.id === newChoiceB.id) ||
-          (discardedComparison.left.id === newChoiceB.id &&
-            discardedComparison.right.id === newChoiceA.id)
+      const existingComparison = this.list.getComparisonFromDiscarded(
+        newChoiceA,
+        newChoiceB
       );
 
-      if (discardedIndex !== -1) {
-        const discardedComparison = this.list.discarded[discardedIndex];
-        const { left, right, pick } = discardedComparison;
-        this.list.discarded.splice(discardedIndex, 1);
+      if (existingComparison) {
+        const { left, right, pick } = existingComparison;
         this.submit(left, right, pick);
         return;
       }
@@ -184,7 +179,11 @@ export class SortStore {
           (comparison) =>
             comparison.left.id !== item.id && comparison.right.id !== item.id
         );
-      this.list.discarded.push(...discarded);
+      discarded.forEach((comparison) =>
+        this.list.discarded.add(
+          this.list.getDiscardedKey(comparison.winner, comparison.loser)
+        )
+      );
     }
   };
 }

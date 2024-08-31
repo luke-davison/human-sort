@@ -10,6 +10,13 @@ import styles from "./sorting-page.module.css";
 import { getEstimatedComparisons } from "./get-estimated-comparisons";
 import { action } from "mobx";
 import { Item } from "../stores/item";
+import { ChangeableText } from "../components/changeable-text";
+
+const getFontSize = (value: string) => {
+  if (value.length < 50) return 24;
+  if (value.length < 100) return 18;
+  if (value.length < 200) return 16;
+};
 
 export const SortingPage = observer(() => {
   const appStore = useAppStore();
@@ -39,31 +46,29 @@ export const SortingPage = observer(() => {
           {left && right && (
             <>
               <div>
-                <input
-                  value={left.name}
-                  onChange={(event) =>
-                    onChangeChoiceName(left, event.target.value)
-                  }
-                />
                 <button
                   className={styles.sortingPageChoice}
+                  style={{ fontSize: getFontSize(left.name) }}
                   onClick={() => submit(left, right, "l")}
                 >
+                  <ChangeableText
+                    value={left.name}
+                    onChange={(value) => onChangeChoiceName(left, value)}
+                  />
                   <ItemImage item={left} />
                 </button>
               </div>
               <div>or</div>
               <div>
-                <input
-                  value={right.name}
-                  onChange={(event) =>
-                    onChangeChoiceName(right, event.target.value)
-                  }
-                />
                 <button
                   className={styles.sortingPageChoice}
+                  style={{ fontSize: getFontSize(right.name) }}
                   onClick={() => submit(left, right, "r")}
                 >
+                  <ChangeableText
+                    value={right.name}
+                    onChange={(value) => onChangeChoiceName(right, value)}
+                  />
                   <ItemImage item={right} />
                 </button>
               </div>
@@ -120,7 +125,7 @@ export const SortingPage = observer(() => {
                       <span className={styles.sortingPageResultName}>
                         {result.name}
                       </span>
-                      <span onClick={() => redoResult(result)}>Redo</span>
+                      <button onClick={() => redoResult(result)}>x</button>
                     </div>
                   ))}
                 </>

@@ -10,12 +10,12 @@ export const SiteHeader = observer(() => {
   return (
     <div className={styles.siteHeader}>
       <a className={styles.siteTitle} onClick={returnToLanding}>
-        Human sort
+        You sort
       </a>
       {page === "landing" && (
         <div className={styles.siteDescription}>
-          Why develop AI or algorithms to sort your data when you can get humans
-          to do it?
+          Why develop AI or algorithms to sort your data when you can do it
+          yourself?
         </div>
       )}
     </div>

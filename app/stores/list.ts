@@ -13,7 +13,7 @@ export class List {
   sortType: SortType = "tournament";
   items: Item[] = [];
   comparisons: Comparison[] = [];
-  discarded: Comparison[] = [];
+  discarded = new Set<string>();
 
   constructor(private appStore: AppStore, private data: Data) {
     this.importData(data);
@@ -41,7 +41,7 @@ export class List {
     this.sortType = data.sortType;
     this.items = items;
     this.comparisons = this.importComparisons(data.comparisons, items);
-    this.discarded = this.importComparisons(data.discarded, items);
+    this.discarded = this.importDiscarded(data.discarded);
   };
 
   importComparisons = (comparisonsStr: string, items: Item[]): Comparison[] => {
@@ -64,6 +64,10 @@ export class List {
     });
   };
 
+  importDiscarded = (discardedStr: string): Set<string> => {
+    return new Set(JSON.parse(discardedStr) as string[]);
+  };
+
   exportList = (): Data => {
     return {
       id: this.data.id,
@@ -71,19 +75,25 @@ export class List {
       description: this.description,
       sortType: this.sortType,
       items: JSON.stringify(this.items.map((item) => item.export())),
-      comparisons: this.exportComparisons(this.comparisons),
-      discarded: this.exportComparisons(this.discarded)
+      comparisons: this.exportComparisons(),
+      discarded: this.exportDiscarded()
     };
   };
 
-  exportComparisons = (comparisons: Comparison[]): string => {
-    const comparisonData: ComparisonData[] = comparisons.map((comparison) => ({
-      left: comparison.left.id,
-      right: comparison.right.id,
-      pick: comparison.pick
-    }));
+  exportComparisons = (): string => {
+    const comparisonData: ComparisonData[] = this.comparisons.map(
+      (comparison) => ({
+        left: comparison.left.id,
+        right: comparison.right.id,
+        pick: comparison.pick
+      })
+    );
 
     return JSON.stringify(comparisonData);
+  };
+
+  exportDiscarded = (): string => {
+    return JSON.stringify(Array.from(this.discarded));
   };
 
   get nextId(): string {
@@ -140,5 +150,37 @@ export class List {
     });
     this.items = newArray;
     this.saveUpdate();
+  };
+
+  getDiscardedKey = (winner: Item, loser: Item) => {
+    return `${winner.id}>${loser.id}`;
+  };
+
+  getComparisonFromDiscarded = (
+    left: Item,
+    right: Item
+  ): Comparison | undefined => {
+    let winner: Item | undefined,
+      loser: Item | undefined,
+      pick: "l" | "r" | undefined;
+
+    const keyA = this.getDiscardedKey(left, right);
+    const keyB = this.getDiscardedKey(right, left);
+    if (this.discarded.has(keyA)) {
+      winner = left;
+      loser = right;
+      pick = "l";
+    } else if (this.discarded.has(keyB)) {
+      winner = right;
+      loser = left;
+      pick = "r";
+    }
+
+    this.discarded.delete(keyA);
+    this.discarded.delete(keyB);
+
+    if (winner && loser && pick) {
+      return { winner, loser, pick, left, right };
+    }
   };
 }

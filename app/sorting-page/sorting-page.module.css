@@ -15,12 +15,8 @@
 
 .sortingPageChoice {
   min-height: 140px;
-  min-width: 300px;
-  font-size: 10px;
-}
-
-.sortingPageChoices input {
   width: 300px;
+  font-size: 10px;
 }
 
 .sortingPageTitle {
