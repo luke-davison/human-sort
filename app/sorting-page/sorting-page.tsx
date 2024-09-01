@@ -1,7 +1,7 @@
 "use client";
 
 import { observer } from "mobx-react";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { SortStore } from "../stores/sort-store";
 import { useAppStore } from "../hooks/use-app-store";
 import { SortStoreContext } from "../hooks/use-sort-store";
@@ -48,6 +48,23 @@ export const SortingPage = observer(() => {
   const scrollToComaprisons = () => {
     comparisonsListRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const onKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "ArrowDown") {
+        undo();
+      } else if (choices && choices.length > 1) {
+        if (event.key === "ArrowRight") {
+          submit(choices[0], choices[1], "r");
+        } else if (event.key === "ArrowLeft") {
+          submit(choices[0], choices[1], "l");
+        }
+      }
+    };
+
+    document.addEventListener("keydown", onKeyPress);
+    return () => document.removeEventListener("keydown", onKeyPress);
+  }, [choices, submit, undo]);
 
   return (
     <SortStoreContext.Provider value={sortStore}>
