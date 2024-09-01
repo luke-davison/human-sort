@@ -66,6 +66,11 @@ export const SortingPage = observer(() => {
     return () => document.removeEventListener("keydown", onKeyPress);
   }, [choices, submit, undo]);
 
+  const resultsText = `Results - ${results.length} / ${list.items.length}`;
+  const comparisonsText = `Comparisons - ${
+    comparisons.length
+  } / ${getEstimatedComparisons(list.items.length)}`;
+
   return (
     <SortStoreContext.Provider value={sortStore}>
       <div className={styles.sortingPageTopContainer}>
@@ -118,48 +123,43 @@ export const SortingPage = observer(() => {
         </div>
         <div className={styles.linksToLists}>
           {comparisons.length > 0 && (
-            <button onClick={scrollToComaprisons}>
-              Comparisons - {comparisons.length}
-            </button>
+            <button onClick={scrollToComaprisons}>{comparisonsText}</button>
           )}
           {results.length > 0 && (
-            <button onClick={scrollToResults}>
-              Results - {results.length}
-            </button>
+            <button onClick={scrollToResults}>{resultsText}</button>
           )}
         </div>
       </div>
 
-      <div ref={resultsListRef}>
-        <div>
-          Results - {results.length} / {list.items.length}
-        </div>
+      {results.length > 0 && (
+        <div
+          ref={resultsListRef}
+          className={styles.sortingPageResultsContainer}
+        >
+          <div>{resultsText}</div>
 
-        <div className={styles.sortingPageResults}>
-          {results.length > 0 && (
-            <>
-              {results.map((result, index) => (
-                <div key={result.id} className={styles.sortingPageResult}>
-                  <span>
-                    {index + 1}
-                    {". "}
-                  </span>
-                  <span className={styles.sortingPageResultName}>
-                    {result.name}
-                  </span>
-                  <button onClick={() => redoResult(result)}>x</button>
-                </div>
-              ))}
-            </>
-          )}
+          <div className={styles.sortingPageResults}>
+            {results.map((result, index) => (
+              <div key={result.id} className={styles.sortingPageResult}>
+                <span>
+                  {index + 1}
+                  {". "}
+                </span>
+                <span className={styles.sortingPageResultName}>
+                  {result.name}
+                </span>
+                <button onClick={() => redoResult(result)}>x</button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div ref={comparisonsListRef}>
-        <div>
-          Comparisons made - {comparisons.length} /{" "}
-          {getEstimatedComparisons(list.items.length)} (approx)
-        </div>
+      <div
+        ref={comparisonsListRef}
+        className={styles.sortingPageResultsContainer}
+      >
+        <div>{comparisonsText} (approx)</div>
         <div className={styles.sortingPageResults}>
           {comparisons
             .slice(-20)
