@@ -1,5 +1,6 @@
 .changeableTextWrapper {
   display: flex;
+  gap: 12px;
 }
 
 .changeableTextValue {
@@ -9,4 +10,8 @@
 
 .changeableTextIcon {
   font-size: 18px;
+}
+
+.changeableTextInput {
+  flex: 1;
 }

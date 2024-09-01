@@ -12,12 +12,7 @@ import { action } from "mobx";
 import { Item } from "../stores/item";
 import { ChangeableText } from "../components/changeable-text";
 import { SiteHeader } from "../components/site-header";
-
-const getFontSize = (value: string) => {
-  if (value.length < 50) return 24;
-  if (value.length < 100) return 18;
-  if (value.length < 200) return 16;
-};
+import { SortItem } from "./sort-item";
 
 export const SortingPage = observer(() => {
   const appStore = useAppStore();
@@ -81,33 +76,17 @@ export const SortingPage = observer(() => {
           <div className={styles.sortingPageChoices}>
             {left && right && (
               <>
-                <div>
-                  <button
-                    className={styles.sortingPageChoice}
-                    style={{ fontSize: getFontSize(left.name) }}
-                    onClick={() => submit(left, right, "l")}
-                  >
-                    <ChangeableText
-                      value={left.name}
-                      onChange={(value) => onChangeChoiceName(left, value)}
-                    />
-                    <ItemImage item={left} />
-                  </button>
-                </div>
+                <SortItem
+                  item={left}
+                  onSubmit={() => submit(left, right, "l")}
+                  onChange={(value) => onChangeChoiceName(left, value)}
+                />
                 <div>or</div>
-                <div>
-                  <button
-                    className={styles.sortingPageChoice}
-                    style={{ fontSize: getFontSize(right.name) }}
-                    onClick={() => submit(left, right, "r")}
-                  >
-                    <ChangeableText
-                      value={right.name}
-                      onChange={(value) => onChangeChoiceName(right, value)}
-                    />
-                    <ItemImage item={right} />
-                  </button>
-                </div>
+                <SortItem
+                  item={right}
+                  onSubmit={() => submit(left, right, "r")}
+                  onChange={(value) => onChangeChoiceName(right, value)}
+                />
               </>
             )}
           </div>

@@ -1,0 +1,10 @@
+.sortingPageChoice {
+  min-height: 140px;
+  min-width: 300px;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
