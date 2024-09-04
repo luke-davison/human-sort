@@ -121,13 +121,18 @@ export const SortingPage = observer(() => {
             {results.map((result, index) => (
               <div key={result.id} className={styles.sortingPageResult}>
                 <span>
+                  <button onClick={() => redoResult(result)}>x</button>
+                </span>
+                <span className={styles.sortingPageResultCount}>
                   {index + 1}
                   {". "}
+                </span>
+                <span className={styles.sortingPageResultImage}>
+                  <ItemImage item={result} />
                 </span>
                 <span className={styles.sortingPageResultName}>
                   {result.name}
                 </span>
-                <button onClick={() => redoResult(result)}>x</button>
               </div>
             ))}
           </div>
@@ -139,12 +144,12 @@ export const SortingPage = observer(() => {
         className={styles.sortingPageResultsContainer}
       >
         <div>{comparisonsText} (approx)</div>
-        <div className={styles.sortingPageResults}>
+        <div>
           {comparisons
             .slice(-20)
             .reverse()
             .map((comparison, index) => (
-              <div key={index} className={styles.sortingPageResult}>
+              <div key={index}>
                 {comparisons.length - index}
                 {". "}
                 {comparison.left.name}

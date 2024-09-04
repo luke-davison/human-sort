@@ -64,13 +64,70 @@
 
 .sortingPageResult {
   display: flex;
-  gap: 8px;
   padding: 12px 4px;
-  border-bottom: 1px solid gray;
+  align-items: stretch;
+}
+
+.sortingPageResult:not(:first-child) {
+  margin-top: -90px;
+}
+
+.sortingPageResult > span {
+  display: flex;
+  align-items: center;
+  background-color: cornsilk;
+}
+
+.sortingPageResult:nth-child(2n) {
+  flex-direction: row-reverse;
+}
+
+.sortingPageResult:nth-child(2n) > span {
+  background-color: lightgray;
+}
+
+.sortingPageResultCount {
+  width: 50px;
+  text-align: center;
+  background-color: cornsilk;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sortingPageResult:nth-child(2n) .sortingPageResultCount {
+  background-color: lightgray;
+}
+
+.sortingPageResultImage {
+  padding: 12px 24px 12px 0;
+  background-color: cornsilk;
+}
+
+.sortingPageResult:nth-child(2n) .sortingPageResultImage {
+  background-color: lightgray;
+  padding: 12px 0 12px 24px;
+}
+
+.sortingPageResultImage img {
+  width: 100px;
+  height: 100px;
 }
 
 .sortingPageResultName {
   flex-grow: 1;
+  background-color: cornsilk;
+  padding: 12px;
+  z-index: -1;
+  align-self: center;
+}
+
+.sortingPageResult:nth-child(2n) .sortingPageResultName {
+  justify-content: flex-end;
+
+  background-color: lightgray;
 }
 
 .linksToLists {

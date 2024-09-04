@@ -27,7 +27,7 @@ export const ChangeableText: FC<ChangeableTextProps> = observer(
         ) : (
           <div className={styles.changeableTextValue}>{value}</div>
         )}
-        <div
+        <button
           className={styles.changeableTextIcon}
           onClick={(event) => {
             event.stopPropagation();
@@ -35,7 +35,7 @@ export const ChangeableText: FC<ChangeableTextProps> = observer(
           }}
         >
           ⚙
-        </div>
+        </button>
       </div>
     );
   }
