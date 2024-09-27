@@ -2,7 +2,7 @@
 
 import { observer } from "mobx-react";
 import { useAppStore } from "../hooks/use-app-store";
-import { ItemImage } from "../components/item.image";
+import { ItemImage } from "../components/item-image";
 import { BoardGameAdd } from "../components/boardgame-add";
 import styles from "./listing-page.module.css";
 import { useState } from "react";

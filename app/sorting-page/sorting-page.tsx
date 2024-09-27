@@ -5,12 +5,11 @@ import { useEffect, useMemo, useRef } from "react";
 import { SortStore } from "../stores/sort-store";
 import { useAppStore } from "../hooks/use-app-store";
 import { SortStoreContext } from "../hooks/use-sort-store";
-import { ItemImage } from "../components/item.image";
+import { ItemImage } from "../components/item-image";
 import styles from "./sorting-page.module.css";
 import { getEstimatedComparisons } from "./get-estimated-comparisons";
 import { action } from "mobx";
 import { Item } from "../stores/item";
-import { ChangeableText } from "../components/changeable-text";
 import { SiteHeader } from "../components/site-header";
 import { SortItem } from "./sort-item";
 

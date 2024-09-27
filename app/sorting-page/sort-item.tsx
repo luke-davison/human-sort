@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import { Item } from "../stores/item";
 import { ChangeableText } from "../components/changeable-text";
 import styles from "./sort-item.module.css";
-import { ItemImage } from "../components/item.image";
+import { ItemImage } from "../components/item-image";
 
 interface SortItemProps {
   item: Item;
